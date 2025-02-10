@@ -30,5 +30,6 @@ public class MemberMethodAdvice {
                               @Advice.Local(value = "_ADVICE_KEY_$JOYLIVE_LOCAL") String adviceKey
     ) throws Throwable {
         System.out.println("onExit: " + adviceKey);
+        result = "advice-" + adviceKey;
     }
 }

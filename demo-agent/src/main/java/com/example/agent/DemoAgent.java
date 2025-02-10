@@ -33,6 +33,9 @@ public class DemoAgent {
         if (Objects.equals("advice", args.get("transformer"))) {
             System.out.println("Using AdviceTransformer");
             transformer = new AdviceTransformer();
+        } else if (Objects.equals("delegation", args.get("transformer"))) {
+            System.out.println("Using DelegationTransformer");
+            transformer = new DelegationTransformer();
         }
 
         if (transformer != null) {

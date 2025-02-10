@@ -40,7 +40,7 @@ public class Exporter extends AgentBuilder.Listener.Adapter {
             if (dynamicType instanceof DynamicType.Default) {
                 save((DynamicType.Default) dynamicType);
             } else {
-                dynamicType.saveIn(output);
+                //dynamicType.saveIn(output);
             }
         } catch (IOException e) {
             System.out.println("failed to save class byte code. " + typeDescription.getTypeName());
