@@ -3,7 +3,9 @@ package com.example.agent;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.agent.builder.JokerAgentBuilderDefault;
+import net.bytebuddy.agent.builder.JokerDescriptionStrategy;
 import net.bytebuddy.agent.builder.JokerNativeMethodStrategy;
+import net.bytebuddy.dynamic.scaffold.MethodGraph;
 import net.bytebuddy.implementation.JokerImplementationContextFactory;
 import net.bytebuddy.matcher.ElementMatchers;
 
@@ -28,9 +30,11 @@ public class DemoAgent {
         if (Objects.equals("joker", args.get("type"))) {
             ByteBuddy byteBuddy = new ByteBuddy()
                     .with(new JokerAuxiliaryTypeNamingStrategy(NAME_TRAIT))
-                    .with(new JokerImplementationContextFactory(NAME_TRAIT));
+                    .with(new JokerImplementationContextFactory(NAME_TRAIT))
+                    .with(new JokerMethodGraphCompilerDelegate(MethodGraph.Compiler.DEFAULT));
 
-            builder = new JokerAgentBuilderDefault(byteBuddy, new JokerNativeMethodStrategy(NAME_TRAIT));
+            builder = new JokerAgentBuilderDefault(byteBuddy, new JokerNativeMethodStrategy(NAME_TRAIT))
+                    .with(new JokerDescriptionStrategy(NAME_TRAIT)) ;
         } else {
             builder = new AgentBuilder.Default();
         }
