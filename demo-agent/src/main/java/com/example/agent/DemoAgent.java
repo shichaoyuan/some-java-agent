@@ -1,6 +1,10 @@
 package com.example.agent;
 
+import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.agent.builder.AgentBuilder;
+import net.bytebuddy.agent.builder.JokerAgentBuilderDefault;
+import net.bytebuddy.agent.builder.JokerNativeMethodStrategy;
+import net.bytebuddy.implementation.JokerImplementationContextFactory;
 import net.bytebuddy.matcher.ElementMatchers;
 
 import java.lang.instrument.Instrumentation;
@@ -13,11 +17,24 @@ public class DemoAgent {
 
     private static final String TARGET_CLASS = "com.example.demo.Target";
 
+    private static final String NAME_TRAIT = "joker$";
+
     public static void premain(String arguments, Instrumentation instrumentation) {
         Map<String, String> args = createArgs(arguments);
         System.out.println("Arguments: " + args);
 
-        AgentBuilder builder = new AgentBuilder.Default();
+
+        AgentBuilder builder;
+        if (Objects.equals("joker", args.get("type"))) {
+            ByteBuddy byteBuddy = new ByteBuddy()
+                    .with(new JokerAuxiliaryTypeNamingStrategy(NAME_TRAIT))
+                    .with(new JokerImplementationContextFactory(NAME_TRAIT));
+
+            builder = new JokerAgentBuilderDefault(byteBuddy, new JokerNativeMethodStrategy(NAME_TRAIT));
+        } else {
+            builder = new AgentBuilder.Default();
+        }
+
         builder = EventLogger.configure(builder);
         builder = Exporter.configure(builder);
 
